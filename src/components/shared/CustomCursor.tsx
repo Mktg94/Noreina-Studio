@@ -74,7 +74,7 @@ export default function CustomCursor() {
       {/* Dot cursor */}
       <motion.div
         ref={dotRef}
-        className="fixed pointer-events-none z-[9999]"
+        className="fixed pointer-events-none z-9999"
         style={{
           left: x - 4,
           top: y - 4,
