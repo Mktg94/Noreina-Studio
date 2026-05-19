@@ -167,7 +167,7 @@ export default function Services() {
             onClick={() => document.querySelector("#contact")?.scrollIntoView({ behavior: "smooth" })}
             data-cursor="pointer"
           >
-            <div className="absolute inset-0 bg-gradient-to-br from-blue-500/5 to-purple-600/5 opacity-0 group-hover:opacity-100 transition-opacity" />
+            <div className="absolute inset-0 bg-linear-to-br from-blue-500/5 to-purple-600/5 opacity-0 group-hover:opacity-100 transition-opacity" />
             <span className="text-2xl mb-2">✦</span>
             <h3 className="text-white font-semibold text-sm mb-1">Have a project?</h3>
             <p className="text-[#6b7280] text-xs">Let&apos;s discuss it →</p>

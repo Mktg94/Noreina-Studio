@@ -32,8 +32,8 @@ export default function TechStack() {
       <div className="absolute inset-0 grid-bg opacity-10" />
 
       {/* Fade edges */}
-      <div className="absolute inset-y-0 left-0 w-24 bg-gradient-to-r from-[#080808] to-transparent z-10 pointer-events-none" />
-      <div className="absolute inset-y-0 right-0 w-24 bg-gradient-to-l from-[#080808] to-transparent z-10 pointer-events-none" />
+      <div className="absolute inset-y-0 left-0 w-24 bg-linear-to-r from-[#080808] to-transparent z-10 pointer-events-none" />
+      <div className="absolute inset-y-0 right-0 w-24 bg-linear-to-l from-[#080808] to-transparent z-10 pointer-events-none" />
 
       <div className="relative max-w-7xl mx-auto px-6" ref={ref}>
         {/* Header */}

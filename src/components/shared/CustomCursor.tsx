@@ -94,7 +94,7 @@ export default function CustomCursor() {
       {/* Ring cursor */}
       <div
         ref={ringRef}
-        className="fixed pointer-events-none z-[9998]"
+        className="fixed pointer-events-none z-9998"
         style={{
           width: 32,
           height: 32,

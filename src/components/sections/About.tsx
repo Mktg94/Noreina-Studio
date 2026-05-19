@@ -41,7 +41,7 @@ export default function About() {
     >
       {/* Subtle background */}
       <div className="absolute inset-0 dot-grid opacity-10" />
-      <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[600px] h-px bg-gradient-to-r from-transparent via-white/10 to-transparent" />
+      <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[600px] h-px bg-linear-to-r from-transparent via-white/10 to-transparent" />
 
       <div className="relative max-w-7xl mx-auto px-6">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 lg:gap-24 items-center">
@@ -119,7 +119,7 @@ export default function About() {
           initial={{ scaleX: 0 }}
           animate={isInView ? { scaleX: 1 } : { scaleX: 0 }}
           transition={{ duration: 1.2, delay: 0.6, ease: [0.16, 1, 0.3, 1] }}
-          className="mt-20 h-px bg-gradient-to-r from-transparent via-white/10 to-transparent origin-left"
+          className="mt-20 h-px bg-linear-to-r from-transparent via-white/10 to-transparent origin-left"
         />
       </div>
     </section>

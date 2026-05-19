@@ -128,8 +128,8 @@ export default function Hero() {
       <FloatingOrbs />
 
       {/* Vignette */}
-      <div className="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-[#080808] pointer-events-none" />
-      <div className="absolute inset-0 bg-gradient-to-r from-[#080808]/50 via-transparent to-[#080808]/50 pointer-events-none" />
+      <div className="absolute inset-0 bg-linear-to-b from-transparent via-transparent to-[#080808] pointer-events-none" />
+      <div className="absolute inset-0 bg-linear-to-r from-[#080808]/50 via-transparent to-[#080808]/50 pointer-events-none" />
 
       {/* Content */}
       <div className="relative z-10 max-w-7xl mx-auto px-6 pt-32 pb-20 text-center">

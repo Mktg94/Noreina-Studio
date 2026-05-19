@@ -62,7 +62,7 @@ export default function Navbar() {
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.8, delay: 0.2, ease: [0.16, 1, 0.3, 1] }}
         className={cn(
-          "fixed top-0 left-0 right-0 z-[9990] transition-all duration-500",
+          "fixed top-0 left-0 right-0 z-9990 transition-all duration-500",
           scrolled
             ? "glass border-b border-white/5 py-3"
             : "bg-transparent py-5"
@@ -80,7 +80,7 @@ export default function Navbar() {
             <motion.div
               whileHover={{ scale: 1.05, rotate: 5 }}
               transition={{ duration: 0.3 }}
-              className="w-8 h-8 rounded-lg bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center"
+              className="w-8 h-8 rounded-lg bg-linear-to-br from-blue-500 to-purple-600 flex items-center justify-center"
             >
               <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
                 <path d="M8 1L14 4.5V11.5L8 15L2 11.5V4.5L8 1Z" fill="white" opacity="0.95" />
@@ -120,7 +120,7 @@ export default function Navbar() {
               whileHover={{ scale: 1.02 }}
               whileTap={{ scale: 0.98 }}
               onClick={() => handleNavClick("#contact")}
-              className="px-5 py-2.5 text-sm font-medium text-white rounded-xl bg-gradient-to-r from-blue-600 to-blue-500 hover:from-blue-500 hover:to-purple-600 transition-all duration-300 glow-blue-sm"
+              className="px-5 py-2.5 text-sm font-medium text-white rounded-xl bg-linear-to-r from-blue-600 to-blue-500 hover:from-blue-500 hover:to-purple-600 transition-all duration-300 glow-blue-sm"
               data-cursor="pointer"
             >
               Let&apos;s Talk
@@ -160,7 +160,7 @@ export default function Navbar() {
             initial="closed"
             animate="open"
             exit="closed"
-            className="fixed inset-y-0 right-0 w-full max-w-sm z-[9989] glass-strong border-l border-white/5 flex flex-col pt-24 pb-8 px-8"
+            className="fixed inset-y-0 right-0 w-full max-w-sm z-9989 glass-strong border-l border-white/5 flex flex-col pt-24 pb-8 px-8"
           >
             <motion.nav
               variants={staggerContainer}
@@ -187,7 +187,7 @@ export default function Navbar() {
             >
               <button
                 onClick={() => handleNavClick("#contact")}
-                className="w-full py-4 text-center font-medium text-white rounded-xl bg-gradient-to-r from-blue-600 to-purple-600 mt-6"
+                className="w-full py-4 text-center font-medium text-white rounded-xl bg-linear-to-r from-blue-600 to-purple-600 mt-6"
                 data-cursor="pointer"
               >
                 Let&apos;s Work Together
@@ -209,7 +209,7 @@ export default function Navbar() {
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             onClick={() => setMobileOpen(false)}
-            className="fixed inset-0 z-[9988] bg-black/60 md:hidden"
+            className="fixed inset-0 z-9988 bg-black/60 md:hidden"
           />
         )}
       </AnimatePresence>

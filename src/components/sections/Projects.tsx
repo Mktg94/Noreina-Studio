@@ -106,7 +106,7 @@ function ProjectCard({ project, index }: { project: (typeof projects)[0]; index:
         />
 
         {/* Top visual area */}
-        <div className={`relative h-64 md:h-72 overflow-hidden bg-gradient-to-br ${project.gradient}`}>
+        <div className={`relative h-64 md:h-72 overflow-hidden bg-linear-to-br ${project.gradient}`}>
           <div className={`absolute inset-0 ${project.bgPattern} opacity-30`} />
 
           {/* Floating icon */}

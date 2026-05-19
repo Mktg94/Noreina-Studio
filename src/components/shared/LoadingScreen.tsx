@@ -43,7 +43,7 @@ export default function LoadingScreen() {
 
   return (
     <motion.div
-      className="fixed inset-0 z-[99999] bg-[#050505] flex flex-col items-center justify-center"
+      className="fixed inset-0 z-99999 bg-[#050505] flex flex-col items-center justify-center"
       animate={isComplete ? { opacity: 0, scale: 1.03 } : { opacity: 1, scale: 1 }}
       transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
     >
@@ -61,7 +61,7 @@ export default function LoadingScreen() {
         className="relative z-10 text-center mb-16"
       >
         <div className="flex items-center gap-3 mb-2">
-          <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center">
+          <div className="w-8 h-8 rounded-lg bg-linear-to-br from-blue-500 to-purple-600 flex items-center justify-center">
             <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
               <path d="M8 1L14 4.5V11.5L8 15L2 11.5V4.5L8 1Z" fill="white" opacity="0.9" />
             </svg>
@@ -75,7 +75,7 @@ export default function LoadingScreen() {
       <div className="relative z-10 w-48">
         <div className="h-px bg-white/5 rounded-full overflow-hidden">
           <motion.div
-            className="h-full bg-gradient-to-r from-blue-500 to-purple-600 rounded-full"
+            className="h-full bg-linear-to-r from-blue-500 to-purple-600 rounded-full"
             style={{ width: `${progress}%` }}
             transition={{ ease: "linear" }}
           />

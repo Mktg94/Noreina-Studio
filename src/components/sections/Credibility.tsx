@@ -52,7 +52,7 @@ export default function Credibility() {
     >
       {/* Background */}
       <div className="absolute inset-0 dot-grid opacity-10" />
-      <div className="absolute inset-0 bg-gradient-to-b from-transparent via-blue-950/5 to-transparent pointer-events-none" />
+      <div className="absolute inset-0 bg-linear-to-b from-transparent via-blue-950/5 to-transparent pointer-events-none" />
 
       <div className="relative max-w-7xl mx-auto px-6" ref={ref}>
         {/* Header */}
@@ -136,7 +136,7 @@ export default function Credibility() {
             <span className="text-blue-400 font-semibold">actually move the needle.</span>&rdquo;
           </p>
           <div className="flex items-center justify-center gap-3 mt-6">
-            <div className="w-8 h-8 rounded-full bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center text-xs font-bold text-white">N</div>
+            <div className="w-8 h-8 rounded-full bg-linear-to-br from-blue-500 to-purple-600 flex items-center justify-center text-xs font-bold text-white">N</div>
             <div className="text-left">
               <div className="text-white text-sm font-medium">Noreina Studio</div>
               <div className="text-[#6b7280] text-xs">Full-Stack Developer · Ethiopia</div>
