@@ -140,15 +140,56 @@
 
 ## 📦 Additional Packages Needed
 
-```bash
-# GSAP ScrollTrigger (already have gsap)
-# No extra install — ScrollTrigger is included in gsap
+### Already Installed (Core)
+These packages are already in your `package.json`:
 
-# Calendar integration (optional)
+```bash
+# Animation & 3D (already installed)
+gsap                          # Animation library + ScrollTrigger
+@gsap/react                   # React integration for GSAP
+@react-three/fiber            # React Three.js renderer
+@react-three/drei            # R3F helper components
+three                         # 3D graphics library
+@types/three                  # TypeScript definitions
+framer-motion                 # UI animations
+lenis                         # Smooth scrolling
+```
+
+### Optional (Not Installed)
+To install optional packages:
+
+```bash
+# Calendar integration (Phase 8)
 npm install @calcom/embed-react
 
-# Analytics (optional)
+# Analytics (Phase 10)
 npm install @vercel/analytics
+```
+
+### Full Install (if starting fresh)
+```bash
+npm install gsap @gsap/react @react-three/fiber @react-three/drei three @types/three framer-motion lenis
+npm install @calcom/embed-react @vercel/analytics
+```
+
+### Quick Start Notes
+
+**GSAP + ScrollTrigger:**
+```javascript
+import { gsap } from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
+gsap.registerPlugin(ScrollTrigger);
+```
+
+**React Three Fiber:**
+```javascript
+import { Canvas } from "@react-three/fiber";
+```
+
+**Lenis (smooth scroll):**
+```javascript
+import Lenis from "lenis";
+const lenis = new Lenis();
 ```
 
 ---

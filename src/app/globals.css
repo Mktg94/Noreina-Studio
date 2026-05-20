@@ -344,6 +344,29 @@
   z-index: 1;
 }
 
+/* Hero split-text character animation (GSAP target) */
+.split-char {
+  display: inline-block;
+  will-change: transform, opacity;
+}
+
+.split-line {
+  overflow: hidden;
+}
+
+.split-line-inner {
+  display: inline-block;
+  will-change: transform, opacity;
+}
+
+/* Reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  .split-char,
+  .split-line-inner {
+    will-change: auto;
+  }
+}
+
 /* Hide scrollbar for smooth scroll container */
 .hide-scrollbar {
   -ms-overflow-style: none;
@@ -406,4 +429,39 @@
 }
 .premium-input::placeholder {
   color: rgba(168, 168, 179, 0.5);
+}
+
+/* ───────────────────────────────
+   Futuristic 3D & Animation Utilities
+   ─────────────────────────────── */
+.perspective-1000 {
+  perspective: 1000px;
+}
+.preserve-3d {
+  transform-style: preserve-3d;
+}
+.hero-char {
+  display: inline-block;
+  will-change: transform, opacity;
+  transform-origin: 50% 100%;
+}
+
+/* Animated SVG drawing connection line */
+@keyframes draw-beam {
+  0% {
+    stroke-dashoffset: 1000;
+  }
+  100% {
+    stroke-dashoffset: 0;
+  }
+}
+
+/* GPU-Accelerated Infinite Marquee */
+@keyframes marquee {
+  0% {
+    transform: translate3d(0, 0, 0);
+  }
+  100% {
+    transform: translate3d(-33.3333%, 0, 0);
+  }
 }

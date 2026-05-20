@@ -3,83 +3,166 @@
 import { useState, useEffect, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { cn } from "@/lib/utils";
-import { mobileMenuVariants, staggerItem, staggerContainer } from "@/lib/animations";
 
 const navLinks = [
-  { href: "#about", label: "About" },
-  { href: "#projects", label: "Projects" },
-  { href: "#services", label: "Services" },
-  { href: "#process", label: "Process" },
-  { href: "#stack", label: "Stack" },
-  { href: "#contact", label: "Contact" },
+  { href: "#about", label: "About", num: "01" },
+  { href: "#projects", label: "Projects", num: "02" },
+  { href: "#services", label: "Services", num: "03" },
+  { href: "#process", label: "Process", num: "04" },
+  { href: "#stack", label: "Stack", num: "05" },
+  { href: "#contact", label: "Contact", num: "06" },
 ];
+
+// Reusable physics-based magnetic link wrapper
+function Magnetic({ children }: { children: React.ReactNode }) {
+  const ref = useRef<HTMLDivElement>(null);
+  const [position, setPosition] = useState({ x: 0, y: 0 });
+
+  const handleMouseMove = (e: MouseEvent) => {
+    if (!ref.current) return;
+    const { clientX, clientY } = e;
+    const { left, top, width, height } = ref.current.getBoundingClientRect();
+    const x = clientX - (left + width / 2);
+    const y = clientY - (top + height / 2);
+    // 35% magnetic attraction
+    setPosition({ x: x * 0.35, y: y * 0.35 });
+  };
+
+  const handleMouseLeave = () => {
+    setPosition({ x: 0, y: 0 });
+  };
+
+  useEffect(() => {
+    const el = ref.current;
+    if (el) {
+      el.addEventListener("mousemove", handleMouseMove, { passive: true });
+      el.addEventListener("mouseleave", handleMouseLeave, { passive: true });
+    }
+    return () => {
+      if (el) {
+        el.removeEventListener("mousemove", handleMouseMove);
+        el.removeEventListener("mouseleave", handleMouseLeave);
+      }
+    };
+  }, []);
+
+  return (
+    <motion.div
+      ref={ref}
+      animate={{ x: position.x, y: position.y }}
+      transition={{ type: "spring", stiffness: 150, damping: 15, mass: 0.15 }}
+      className="relative flex items-center justify-center"
+    >
+      {children}
+    </motion.div>
+  );
+}
 
 export default function Navbar() {
   const [scrolled, setScrolled] = useState(false);
+  const [isVisible, setIsVisible] = useState(true);
   const [mobileOpen, setMobileOpen] = useState(false);
   const [activeSection, setActiveSection] = useState("");
+  const lastScrollY = useRef(0);
 
+  // Smart Show/Hide Navbar on Scroll direction + Background state
   useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 40);
-    window.addEventListener("scroll", onScroll, { passive: true });
-    return () => window.removeEventListener("scroll", onScroll);
+    const handleScroll = () => {
+      const currentScrollY = window.scrollY;
+
+      // Scrolled state for background styling
+      setScrolled(currentScrollY > 40);
+
+      // Hide or reveal navigation bar
+      if (currentScrollY < 20) {
+        setIsVisible(true);
+      } else if (currentScrollY > lastScrollY.current) {
+        // Scrolling down
+        setIsVisible(false);
+      } else {
+        // Scrolling up
+        setIsVisible(true);
+      }
+      lastScrollY.current = currentScrollY;
+    };
+
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
-  // Track active section
+  // Track active section via Intersection Observer
   useEffect(() => {
     const observer = new IntersectionObserver(
       (entries) => {
         entries.forEach((entry) => {
-          if (entry.isIntersecting) setActiveSection(`#${entry.target.id}`);
+          if (entry.isIntersecting) {
+            setActiveSection(`#${entry.target.id}`);
+          }
         });
       },
-      { threshold: 0.3, rootMargin: "-80px 0px 0px 0px" }
+      { threshold: 0.25, rootMargin: "-80px 0px 0px 0px" }
     );
+
     navLinks.forEach(({ href }) => {
       const el = document.querySelector(href);
       if (el) observer.observe(el);
     });
+
     return () => observer.disconnect();
   }, []);
 
-  // Close menu on resize
+  // Close mobile menu on desktop resize
   useEffect(() => {
-    const onResize = () => { if (window.innerWidth >= 768) setMobileOpen(false); };
+    const onResize = () => {
+      if (window.innerWidth >= 768) setMobileOpen(false);
+    };
     window.addEventListener("resize", onResize);
     return () => window.removeEventListener("resize", onResize);
   }, []);
 
+  // Handle smooth scroll clicks
   const handleNavClick = (href: string) => {
     setMobileOpen(false);
     const el = document.querySelector(href);
-    if (el) el.scrollIntoView({ behavior: "smooth" });
+    if (el) {
+      el.scrollIntoView({ behavior: "smooth" });
+    }
   };
 
   return (
     <>
       <motion.header
         initial={{ opacity: 0, y: -20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.8, delay: 0.2, ease: [0.16, 1, 0.3, 1] }}
+        animate={{
+          opacity: isVisible ? 1 : 0,
+          y: isVisible ? 0 : -80,
+        }}
+        transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
         className={cn(
-          "fixed top-0 left-0 right-0 z-9990 transition-all duration-500",
+          "fixed top-0 left-0 right-0 z-50 transition-all duration-500",
           scrolled
-            ? "glass border-b border-white/5 py-3"
+            ? "glass border-b border-white/5 py-2.5 bg-black/40 backdrop-blur-2xl"
             : "bg-transparent py-5"
         )}
-        style={scrolled ? { backdropFilter: "blur(24px)", WebkitBackdropFilter: "blur(24px)" } : {}}
       >
         <div className="max-w-7xl mx-auto px-6 flex items-center justify-between">
-          {/* Logo */}
+          
+          {/* Logo with Morph Animation on scroll */}
           <a
             href="#"
-            onClick={(e) => { e.preventDefault(); window.scrollTo({ top: 0, behavior: "smooth" }); }}
+            onClick={(e) => {
+              e.preventDefault();
+              window.scrollTo({ top: 0, behavior: "smooth" });
+            }}
             className="flex items-center gap-2.5 group"
             data-cursor="pointer"
           >
             <motion.div
-              whileHover={{ scale: 1.05, rotate: 5 }}
-              transition={{ duration: 0.3 }}
+              animate={{
+                scale: scrolled ? 0.9 : 1,
+                rotate: scrolled ? 45 : 0,
+              }}
+              transition={{ type: "spring", stiffness: 300, damping: 20 }}
               className="w-8 h-8 rounded-lg bg-linear-to-br from-blue-500 to-purple-600 flex items-center justify-center"
             >
               <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
@@ -87,56 +170,76 @@ export default function Navbar() {
                 <path d="M8 5L11 6.75V10.25L8 12L5 10.25V6.75L8 5Z" fill="white" opacity="0.3" />
               </svg>
             </motion.div>
-            <div>
-              <span className="text-white font-semibold text-sm tracking-tight leading-none block">
+            <div className="flex items-center">
+              <span className="text-white font-semibold text-sm tracking-tight leading-none">
                 Noreina<span className="text-blue-400">.</span>
               </span>
-              <span className="text-[#6b7280] text-[10px] tracking-widest uppercase leading-none">Studio</span>
+              <motion.span
+                animate={{
+                  opacity: scrolled ? 0 : 1,
+                  x: scrolled ? -8 : 0,
+                  width: scrolled ? 0 : "auto",
+                }}
+                transition={{ duration: 0.3 }}
+                className="text-[#6b7280] text-[10px] tracking-widest uppercase leading-none ml-1.5 overflow-hidden block"
+              >
+                Studio
+              </motion.span>
             </div>
           </a>
 
-          {/* Desktop Nav */}
-          <nav className="hidden md:flex items-center gap-1" role="navigation" aria-label="Main navigation">
-            {navLinks.map(({ href, label }) => (
-              <button
-                key={href}
-                onClick={() => handleNavClick(href)}
-                className={cn(
-                  "px-4 py-2 text-sm rounded-lg transition-all duration-200 animated-underline",
-                  activeSection === href
-                    ? "text-white"
-                    : "text-[#6b7280] hover:text-white"
-                )}
-                data-cursor="pointer"
-              >
-                {label}
-              </button>
-            ))}
+          {/* Desktop Navigation Links with Magnetic Attraction & Sliding Background Indicator */}
+          <nav className="hidden md:flex items-center gap-1.5 relative" role="navigation" aria-label="Main navigation">
+            {navLinks.map(({ href, label }) => {
+              const isActive = activeSection === href;
+              return (
+                <Magnetic key={href}>
+                  <button
+                    onClick={() => handleNavClick(href)}
+                    className={cn(
+                      "relative px-4 py-2 text-sm rounded-lg transition-colors duration-300 font-sans font-medium select-none z-10",
+                      isActive ? "text-white font-semibold" : "text-[#6b7280] hover:text-white"
+                    )}
+                    data-cursor="pointer"
+                  >
+                    {/* Active Sliding Background Capsule */}
+                    {isActive && (
+                      <motion.div
+                        layoutId="activeNavBackground"
+                        className="absolute inset-0 bg-white/5 rounded-lg border border-white/8 -z-10"
+                        transition={{ type: "spring", stiffness: 350, damping: 26 }}
+                      />
+                    )}
+                    {label}
+                  </button>
+                </Magnetic>
+              );
+            })}
           </nav>
 
-          {/* CTA */}
+          {/* CTA with Magnetic Effect */}
           <div className="hidden md:flex items-center gap-3">
-            <motion.button
-              whileHover={{ scale: 1.02 }}
-              whileTap={{ scale: 0.98 }}
-              onClick={() => handleNavClick("#contact")}
-              className="px-5 py-2.5 text-sm font-medium text-white rounded-xl bg-linear-to-r from-blue-600 to-blue-500 hover:from-blue-500 hover:to-purple-600 transition-all duration-300 glow-blue-sm"
-              data-cursor="pointer"
-            >
-              Let&apos;s Talk
-            </motion.button>
+            <Magnetic>
+              <button
+                onClick={() => handleNavClick("#contact")}
+                className="px-5 py-2.5 text-sm font-medium text-white rounded-xl bg-linear-to-r from-blue-600 to-blue-500 hover:from-blue-500 hover:to-purple-600 transition-all duration-300 glow-blue-sm shadow-md"
+                data-cursor="pointer"
+              >
+                Let&apos;s Talk
+              </button>
+            </Magnetic>
           </div>
 
-          {/* Mobile hamburger */}
+          {/* Mobile hamburger menu button */}
           <button
             id="mobile-menu-btn"
-            className="md:hidden flex flex-col gap-1.5 p-2 rounded-lg"
+            className="md:hidden flex flex-col gap-1.5 p-2 rounded-lg z-50"
             onClick={() => setMobileOpen(!mobileOpen)}
             aria-label={mobileOpen ? "Close menu" : "Open menu"}
             data-cursor="pointer"
           >
             <motion.span
-              animate={mobileOpen ? { rotate: 45, y: 7 } : { rotate: 0, y: 0 }}
+              animate={mobileOpen ? { rotate: 45, y: 7, backgroundColor: "#ffffff" } : { rotate: 0, y: 0, backgroundColor: "#ffffff" }}
               className="block w-5 h-px bg-white transition-all"
             />
             <motion.span
@@ -144,73 +247,95 @@ export default function Navbar() {
               className="block w-5 h-px bg-white"
             />
             <motion.span
-              animate={mobileOpen ? { rotate: -45, y: -7 } : { rotate: 0, y: 0 }}
+              animate={mobileOpen ? { rotate: -45, y: -7, backgroundColor: "#ffffff" } : { rotate: 0, y: 0, backgroundColor: "#ffffff" }}
               className="block w-5 h-px bg-white"
             />
           </button>
         </div>
       </motion.header>
 
-      {/* Mobile Menu */}
+      {/* Mobile Menu Full-Screen Takeover with Staggered Links */}
       <AnimatePresence>
         {mobileOpen && (
           <motion.div
             key="mobile-menu"
-            variants={mobileMenuVariants}
-            initial="closed"
-            animate="open"
-            exit="closed"
-            className="fixed inset-y-0 right-0 w-full max-w-sm z-9989 glass-strong border-l border-white/5 flex flex-col pt-24 pb-8 px-8"
-          >
-            <motion.nav
-              variants={staggerContainer}
-              initial="hidden"
-              animate="visible"
-              className="flex flex-col gap-1"
-            >
-              {navLinks.map(({ href, label }) => (
-                <motion.button
-                  key={href}
-                  variants={staggerItem}
-                  onClick={() => handleNavClick(href)}
-                  className="text-left text-2xl font-medium text-white/80 hover:text-white py-3 border-b border-white/5 last:border-0 transition-colors"
-                  data-cursor="pointer"
-                >
-                  {label}
-                </motion.button>
-              ))}
-            </motion.nav>
-
-            <motion.div
-              variants={staggerItem}
-              className="mt-auto"
-            >
-              <button
-                onClick={() => handleNavClick("#contact")}
-                className="w-full py-4 text-center font-medium text-white rounded-xl bg-linear-to-r from-blue-600 to-purple-600 mt-6"
-                data-cursor="pointer"
-              >
-                Let&apos;s Work Together
-              </button>
-              <p className="text-center text-[#6b7280] text-xs mt-4">
-                Based in Ethiopia · Available Worldwide
-              </p>
-            </motion.div>
-          </motion.div>
-        )}
-      </AnimatePresence>
-
-      {/* Mobile backdrop */}
-      <AnimatePresence>
-        {mobileOpen && (
-          <motion.div
-            key="backdrop"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            onClick={() => setMobileOpen(false)}
-            className="fixed inset-0 z-9988 bg-black/60 md:hidden"
-          />
+            transition={{ duration: 0.4 }}
+            className="fixed inset-0 z-40 bg-black/90 backdrop-blur-3xl flex flex-col justify-center items-center px-8"
+          >
+            {/* Background elements */}
+            <div className="absolute inset-0 dot-grid opacity-5 pointer-events-none" />
+
+            <motion.nav
+              initial="hidden"
+              animate="visible"
+              exit="hidden"
+              variants={{
+                visible: {
+                  transition: {
+                    staggerChildren: 0.08,
+                    delayChildren: 0.15,
+                  },
+                },
+                hidden: {
+                  transition: {
+                    staggerChildren: 0.05,
+                    staggerDirection: -1,
+                  },
+                },
+              }}
+              className="flex flex-col gap-6 w-full max-w-md"
+            >
+              {navLinks.map(({ href, label, num }) => (
+                <motion.div
+                  key={href}
+                  variants={{
+                    hidden: { opacity: 0, y: 30, rotateX: -20 },
+                    visible: {
+                      opacity: 1,
+                      y: 0,
+                      rotateX: 0,
+                      transition: { type: "spring", stiffness: 120, damping: 15 },
+                    },
+                  }}
+                  className="w-full"
+                >
+                  <button
+                    onClick={() => handleNavClick(href)}
+                    className="flex items-baseline gap-4 text-left w-full text-4xl sm:text-5xl font-bold tracking-tight text-white/80 hover:text-white transition-colors py-2 font-sans select-none"
+                    data-cursor="pointer"
+                  >
+                    <span className="text-xs font-mono font-semibold tracking-wider text-blue-500">
+                      {num}
+                    </span>
+                    <span>{label}</span>
+                  </button>
+                </motion.div>
+              ))}
+
+              {/* Mobile CTA */}
+              <motion.div
+                variants={{
+                  hidden: { opacity: 0, y: 20 },
+                  visible: { opacity: 1, y: 0, transition: { delay: 0.5 } },
+                }}
+                className="mt-8 pt-8 border-t border-white/5 w-full flex flex-col gap-4"
+              >
+                <button
+                  onClick={() => handleNavClick("#contact")}
+                  className="w-full py-4 text-center font-medium text-white rounded-xl bg-linear-to-r from-blue-600 to-purple-600 glow-blue-sm active:scale-95 transition-transform"
+                  data-cursor="pointer"
+                >
+                  Let&apos;s Work Together
+                </button>
+                <p className="text-center text-[#6b7280] text-xs font-sans tracking-wide">
+                  Ethiopia · Remote · Available Worldwide
+                </p>
+              </motion.div>
+            </motion.nav>
+          </motion.div>
         )}
       </AnimatePresence>
     </>
