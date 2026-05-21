@@ -1,10 +1,10 @@
 # Upgrade Phases Checklist
 
 ## Phase 1: Hero Section — Completed ✅
-- [x] ParticleField.tsx — Three.js 3D particle mesh with mouse reactivity
-- [x] GradientMesh.tsx — Animated gradient blobs (blue/purple/turquoise)
+- [x] AuroraBackground.tsx — High-performance custom WebGL fluid Simplex noise shader
+- [x] GradientMesh.tsx — Animated gradient ambient orbs
 - [x] HeroCounter.tsx — Viewport count-up numbers using GSAP
-- [x] Rewrite Hero.tsx — GSAP letter-by-letter reveal, scroll zoom-out, 3D mouse parallax
+- [x] Rewrite Hero.tsx — Premium 2027 cinematic upgrade featuring staggered clip-path text reveals, 3D mouse parallax, magnetic physics CTA buttons, and GPU-accelerated scroll-trigger scaling and blur transitions.
 
 ## Phase 2: Navigation — Completed ✅
 - [x] Magnetic nav links — Physics-based magnetic attraction on links & CTA button

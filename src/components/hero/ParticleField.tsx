@@ -1,12 +1,31 @@
 "use client";
 
-import { useRef, useMemo, useCallback, useEffect } from "react";
+import { useRef, useMemo, useCallback, useEffect, useState } from "react";
 import { Canvas, useFrame, useThree } from "@react-three/fiber";
 import { PointMaterial } from "@react-three/drei";
 import * as THREE from "three";
 
+// ─── Visibility context for pausing when off-screen ──────
+function useCanvasVisibility(containerRef: React.RefObject<HTMLDivElement | null>) {
+  const [visible, setVisible] = useState(true);
+
+  useEffect(() => {
+    const el = containerRef.current;
+    if (!el) return;
+
+    const observer = new IntersectionObserver(
+      ([entry]) => setVisible(entry.isIntersecting),
+      { threshold: 0, rootMargin: "100px" }
+    );
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, [containerRef]);
+
+  return visible;
+}
+
 // ─── Particles Mesh ──────────────────────────────────────
-function Particles({ count = 3000 }: { count?: number }) {
+function Particles({ count = 1500, paused = false }: { count?: number; paused?: boolean }) {
   const meshRef = useRef<THREE.Points>(null);
   const mouseRef = useRef({ x: 0, y: 0 });
   const { viewport } = useThree();
@@ -18,13 +37,12 @@ function Particles({ count = 3000 }: { count?: number }) {
 
     for (let i = 0; i < count; i++) {
       const i3 = i * 3;
-      // Spread particles across a wide area
       const theta = Math.random() * Math.PI * 2;
       const phi = Math.acos(2 * Math.random() - 1);
       const r = 3 + Math.random() * 4;
 
       const x = r * Math.sin(phi) * Math.cos(theta);
-      const y = r * Math.sin(phi) * Math.sin(theta) * 0.6; // flatten Y
+      const y = r * Math.sin(phi) * Math.sin(theta) * 0.6;
       const z = (Math.random() - 0.5) * 3;
 
       pos[i3] = x;
@@ -53,7 +71,6 @@ function Particles({ count = 3000 }: { count?: number }) {
     mouseRef.current.y = -(e.clientY / window.innerHeight) * 2 + 1;
   }, []);
 
-  // Listen for mouse moves
   useEffect(() => {
     if (typeof window !== "undefined") {
       window.addEventListener("mousemove", handlePointerMove, { passive: true });
@@ -65,9 +82,10 @@ function Particles({ count = 3000 }: { count?: number }) {
     };
   }, [handlePointerMove]);
 
-  // Animate every frame
+  // Animate every frame — skip when paused (off-screen)
   useFrame(({ clock }) => {
-    if (!meshRef.current) return;
+    if (!meshRef.current || paused) return;
+
     const geometry = meshRef.current.geometry;
     const posAttr = geometry.getAttribute("position") as THREE.BufferAttribute;
     const posArray = posAttr.array as Float32Array;
@@ -75,11 +93,11 @@ function Particles({ count = 3000 }: { count?: number }) {
 
     const mx = mouseRef.current.x;
     const my = mouseRef.current.y;
+    const vw = viewport.width * 0.5;
+    const vh = viewport.height * 0.5;
 
     for (let i = 0; i < count; i++) {
       const i3 = i * 3;
-
-      // Base organic wave motion
       const bx = basePositions[i3];
       const by = basePositions[i3 + 1];
       const bz = basePositions[i3 + 2];
@@ -88,9 +106,8 @@ function Particles({ count = 3000 }: { count?: number }) {
       const waveY = Math.cos(t * 0.2 + bx * 0.4) * 0.12;
       const waveZ = Math.sin(t * 0.25 + bx * 0.3 + by * 0.3) * 0.1;
 
-      // Mouse repulsion/attraction — particles near cursor push away gently
-      const dx = bx - mx * viewport.width * 0.5;
-      const dy = by - my * viewport.height * 0.5;
+      const dx = bx - mx * vw;
+      const dy = by - my * vh;
       const dist = Math.sqrt(dx * dx + dy * dy);
       const influence = Math.max(0, 1 - dist / 3) * 0.4;
 
@@ -101,7 +118,6 @@ function Particles({ count = 3000 }: { count?: number }) {
 
     posAttr.needsUpdate = true;
 
-    // Slow global rotation
     meshRef.current.rotation.y = t * 0.02;
     meshRef.current.rotation.x = Math.sin(t * 0.1) * 0.05;
   });
@@ -134,15 +150,13 @@ function Particles({ count = 3000 }: { count?: number }) {
 }
 
 // ─── Connection Lines ─────────────────────────────────────
-function ConnectionLines({ count = 3000 }: { count?: number }) {
+function ConnectionLines({ paused = false }: { paused?: boolean }) {
   const lineRef = useRef<THREE.LineSegments>(null);
 
-  // We'll draw lines between nearby particles
-  // but we need to share position data — instead do a simple static mesh grid
   const geometry = useMemo(() => {
     const geo = new THREE.BufferGeometry();
-    const lineCount = 80;
-    const positions = new Float32Array(lineCount * 6); // 2 points per line
+    const lineCount = 60;
+    const positions = new Float32Array(lineCount * 6);
     const colors = new Float32Array(lineCount * 6);
 
     for (let i = 0; i < lineCount; i++) {
@@ -162,7 +176,6 @@ function ConnectionLines({ count = 3000 }: { count?: number }) {
       positions[i6 + 4] = y2;
       positions[i6 + 5] = Math.sin(theta2) * r2 * 0.5;
 
-      // Blue-ish color with varying alpha
       const alpha = Math.random() * 0.3 + 0.05;
       colors[i6] = 0.29 * alpha;
       colors[i6 + 1] = 0.51 * alpha;
@@ -178,7 +191,7 @@ function ConnectionLines({ count = 3000 }: { count?: number }) {
   }, []);
 
   useFrame(({ clock }) => {
-    if (!lineRef.current) return;
+    if (!lineRef.current || paused) return;
     lineRef.current.rotation.y = clock.getElapsedTime() * 0.015;
   });
 
@@ -195,13 +208,28 @@ function ConnectionLines({ count = 3000 }: { count?: number }) {
   );
 }
 
+// ─── Scene wrapper that receives paused state ─────────────
+function Scene({ paused }: { paused: boolean }) {
+  return (
+    <>
+      <ambientLight intensity={0.5} />
+      <Particles count={1500} paused={paused} />
+      <ConnectionLines paused={paused} />
+    </>
+  );
+}
+
 // ─── Main Canvas Export ───────────────────────────────────
 export default function ParticleField() {
+  const containerRef = useRef<HTMLDivElement>(null);
+  const visible = useCanvasVisibility(containerRef);
+
   return (
-    <div className="absolute inset-0 z-0" aria-hidden="true">
+    <div ref={containerRef} className="absolute inset-0 z-0" aria-hidden="true">
       <Canvas
         camera={{ position: [0, 0, 6], fov: 60 }}
         dpr={[1, 1.5]}
+        frameloop={visible ? "always" : "never"}
         gl={{
           antialias: false,
           alpha: true,
@@ -209,9 +237,7 @@ export default function ParticleField() {
         }}
         style={{ background: "transparent" }}
       >
-        <ambientLight intensity={0.5} />
-        <Particles count={2500} />
-        <ConnectionLines />
+        <Scene paused={!visible} />
       </Canvas>
     </div>
   );

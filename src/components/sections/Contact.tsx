@@ -106,12 +106,12 @@ export default function Contact() {
               </div>
               <div>
                 <div className="text-[#6b7280] text-xs mb-0.5">Email me</div>
-                <div className="text-white text-sm font-medium">hello@noreina.studio</div>
+                <div className="text-white text-sm font-medium">michaelabrham9@gmail.com</div>
               </div>
             </a>
 
             <a
-              href="https://wa.me/251900000000"
+              href="https://wa.me/+251921786034"
               id="contact-whatsapp-btn"
               target="_blank"
               rel="noopener noreferrer"
@@ -123,7 +123,7 @@ export default function Contact() {
               </div>
               <div>
                 <div className="text-[#6b7280] text-xs mb-0.5">WhatsApp</div>
-                <div className="text-white text-sm font-medium">+251 900 000 000</div>
+                <div className="text-white text-sm font-medium">+251 921 786 034</div>
               </div>
             </a>
 
@@ -242,8 +242,8 @@ export default function Contact() {
                     status === "success"
                       ? "linear-gradient(135deg, #10b981, #059669)"
                       : status === "error"
-                      ? "linear-gradient(135deg, #ef4444, #dc2626)"
-                      : "linear-gradient(135deg, #3b82f6, #2563eb, #7c3aed)",
+                        ? "linear-gradient(135deg, #ef4444, #dc2626)"
+                        : "linear-gradient(135deg, #3b82f6, #2563eb, #7c3aed)",
                   boxShadow:
                     status === "idle"
                       ? "0 0 30px rgba(59,130,246,0.2), 0 0 60px rgba(59,130,246,0.05)"
