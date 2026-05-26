@@ -2,9 +2,15 @@ import { NextRequest, NextResponse } from "next/server";
 import { Resend } from "resend";
 
 export async function POST(req: NextRequest) {
-  // Instantiate inside the handler so this only runs at request-time,
-  // never during the Next.js build-time page-data collection step.
-  const resend = new Resend(process.env.RESEND_API_KEY);
+  const apiKey = process.env.RESEND_API_KEY;
+  if (!apiKey) {
+    return NextResponse.json(
+      { error: "Email service is not configured" },
+      { status: 503 }
+    );
+  }
+
+  const resend = new Resend(apiKey);
 
   try {
     const body = await req.json();

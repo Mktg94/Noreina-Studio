@@ -4,6 +4,7 @@ import { useRef } from "react";
 import { motion, useInView } from "framer-motion";
 import { staggerContainer, staggerItem, fadeUp } from "@/lib/animations";
 import { Code2, Layers, Rocket, Globe } from "lucide-react";
+import { useSectionReveal } from "@/hooks/useSectionReveal";
 
 const highlights = [
   {
@@ -29,13 +30,14 @@ const highlights = [
 ];
 
 export default function About() {
-  const ref = useRef<HTMLElement>(null);
-  const isInView = useInView(ref as React.RefObject<Element>, { once: true, margin: "-15% 0px" });
+  const revealRef = useSectionReveal<HTMLElement>();
+  const contentRef = useRef<HTMLDivElement>(null);
+  const isInView = useInView(contentRef as React.RefObject<Element>, { once: true, margin: "-15% 0px" });
 
   return (
     <section
       id="about"
-      ref={ref}
+      ref={revealRef}
       className="relative section-padding overflow-hidden"
       aria-label="About section"
     >
@@ -43,7 +45,7 @@ export default function About() {
       <div className="absolute inset-0 dot-grid opacity-10" />
       <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[600px] h-px bg-linear-to-r from-transparent via-white/10 to-transparent" />
 
-      <div className="relative max-w-7xl mx-auto px-6">
+      <div ref={contentRef} className="relative max-w-7xl mx-auto px-6">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 lg:gap-24 items-center">
 
           {/* Left — Text */}

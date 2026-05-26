@@ -5,6 +5,7 @@ import { Search, Map, Pen, Code2, Rocket, CheckCircle2 } from "lucide-react";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { motion, AnimatePresence } from "framer-motion";
+import { useSectionReveal } from "@/hooks/useSectionReveal";
 
 if (typeof window !== "undefined") {
   gsap.registerPlugin(ScrollTrigger);
@@ -62,7 +63,7 @@ const steps = [
 ];
 
 export default function Process() {
-  const containerRef = useRef<HTMLDivElement>(null);
+  const containerRef = useSectionReveal<HTMLElement>();
   const leftSideRef = useRef<HTMLDivElement>(null);
   const rightSideRef = useRef<HTMLDivElement>(null);
   const pathRef = useRef<SVGPathElement>(null);

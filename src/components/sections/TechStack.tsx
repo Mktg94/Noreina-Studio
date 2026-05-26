@@ -4,6 +4,7 @@ import { useRef, useState, useEffect } from "react";
 import { motion, useInView } from "framer-motion";
 import { cn } from "@/lib/utils";
 import { Cpu, Globe, Layers, ShieldCheck } from "lucide-react";
+import { useSectionReveal } from "@/hooks/useSectionReveal";
 
 const techs = [
   { name: "Next.js", icon: "▲", color: "#ffffff", description: "Server Side React", level: 95, detail: "Core framework for routing, SSR, and dynamic API integrations." },
@@ -21,8 +22,9 @@ const techs = [
 ];
 
 export default function TechStack() {
-  const containerRef = useRef<HTMLDivElement>(null);
-  const isInView = useInView(containerRef as React.RefObject<Element>, { once: true, margin: "-10% 0px" });
+  const sectionRef = useSectionReveal<HTMLElement>();
+  const contentRef = useRef<HTMLDivElement>(null);
+  const isInView = useInView(contentRef as React.RefObject<Element>, { once: true, margin: "-10% 0px" });
 
   const [gridTilt, setGridTilt] = useState({ x: 0, y: 0 });
   const [hoveredTech, setHoveredTech] = useState<string | null>(null);
@@ -43,7 +45,7 @@ export default function TechStack() {
 
   return (
     <section
-      ref={containerRef}
+      ref={sectionRef}
       id="stack"
       className="relative section-padding overflow-hidden bg-[#080808]"
       aria-label="Technology stack"
@@ -54,7 +56,7 @@ export default function TechStack() {
       <div className="absolute top-1/3 left-10 w-96 h-96 bg-purple-500/3 blur-[120px] rounded-full pointer-events-none" />
       <div className="absolute bottom-1/3 right-10 w-96 h-96 bg-blue-500/3 blur-[120px] rounded-full pointer-events-none" />
 
-      <div className="relative max-w-7xl mx-auto px-6">
+      <div ref={contentRef} className="relative max-w-7xl mx-auto px-6">
         
         {/* Header */}
         <div className="text-center mb-16">
@@ -136,6 +138,29 @@ export default function TechStack() {
 
           {/* Right Column: Interactive 3D Orbiting/Tilting Plane */}
           <div className="lg:col-span-8">
+            <div
+              className="hidden lg:flex relative h-[200px] w-full items-center justify-center mb-8"
+              style={{ perspective: "900px" }}
+            >
+              <div
+                className="relative spin-slow"
+                style={{ width: 0, height: 0, transformStyle: "preserve-3d" }}
+              >
+                {techs.slice(0, 6).map((tech, i) => (
+                  <div
+                    key={`orbit-${tech.name}`}
+                    className="absolute w-12 h-12 -ml-6 -mt-6 rounded-xl bg-[#0a0a0b] border border-white/10 flex items-center justify-center text-sm font-bold"
+                    style={{
+                      transform: `rotateY(${i * 60}deg) translateZ(120px)`,
+                      color: tech.color,
+                    }}
+                    title={tech.name}
+                  >
+                    {tech.icon}
+                  </div>
+                ))}
+              </div>
+            </div>
             <div
               onMouseMove={handleGridMouseMove}
               onMouseLeave={handleGridMouseLeave}

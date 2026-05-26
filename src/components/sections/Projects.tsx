@@ -6,6 +6,7 @@ import { ExternalLink, BookOpen, Building2, ShoppingBag, BarChart3 } from "lucid
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import ProjectMockup from "./ProjectMockup";
+import { useSectionReveal } from "@/hooks/useSectionReveal";
 
 // Register GSAP ScrollTrigger plugin
 if (typeof window !== "undefined") {
@@ -34,7 +35,7 @@ const projects = [
     icon: Building2,
     bgPattern: "grid-bg",
     liveUrl: "https://hamernassa.vercel.app/",
-    caseUrl: "#",
+    caseUrl: "/work/hamernassa",
     num: "01",
   },
   {
@@ -58,7 +59,7 @@ const projects = [
     icon: ShoppingBag,
     bgPattern: "dot-grid",
     liveUrl: "https://spotless-beauty.vercel.app/",
-    caseUrl: "#",
+    caseUrl: "/work/spotless",
     num: "02",
   },
   {
@@ -306,7 +307,7 @@ function ProjectCard({ project }: { project: (typeof projects)[0] }) {
 }
 
 export default function Projects() {
-  const containerRef = useRef<HTMLDivElement>(null);
+  const sectionRef = useSectionReveal<HTMLElement>();
   const gridRef = useRef<HTMLDivElement>(null);
 
   // GSAP ScrollTrigger reveal stagger for cards
@@ -342,7 +343,7 @@ export default function Projects() {
 
   return (
     <section
-      ref={containerRef}
+      ref={sectionRef}
       id="projects"
       className="relative section-padding overflow-hidden bg-[#080808]"
       aria-label="Featured projects"

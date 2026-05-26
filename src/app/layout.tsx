@@ -8,6 +8,8 @@ import CustomCursor from "@/components/shared/CustomCursor";
 import ScrollProgress from "@/components/shared/ScrollProgress";
 import SmoothScroll from "@/components/shared/SmoothScroll";
 import MouseSpotlight from "@/components/shared/MouseSpotlight";
+import JsonLd from "@/components/shared/JsonLd";
+import SectionAmbient from "@/components/shared/SectionAmbient";
 
 const spaceGrotesk = Space_Grotesk({
   subsets: ["latin"],
@@ -52,21 +54,14 @@ export const metadata: Metadata = {
     description:
       "Building modern digital experiences for businesses. Ethiopia-based, world-class delivery.",
     siteName: "Noreina Studio",
-    images: [
-      {
-        url: "/og-image.png",
-        width: 1200,
-        height: 630,
-        alt: "Noreina Studio — Full-Stack Web Developer",
-      },
-    ],
+    images: [{ url: "/opengraph-image", width: 1200, height: 630, alt: "Noreina Studio" }],
   },
   twitter: {
     card: "summary_large_image",
     title: "Noreina Studio — Full-Stack Web Developer",
     description:
       "Building modern digital experiences for businesses. Ethiopia-based, world-class delivery.",
-    images: ["/og-image.png"],
+    images: ["/opengraph-image"],
   },
   robots: {
     index: true,
@@ -97,10 +92,12 @@ export default function RootLayout({
       <head>
         <link rel="icon" href="/favicon.ico" sizes="any" />
         <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+        <JsonLd />
       </head>
-      <body className="bg-[#080808] text-white antialiased" suppressHydrationWarning>
+      <body className="bg-[#080808] text-white antialiased noise-overlay" suppressHydrationWarning>
         <LoadingScreen />
         <SmoothScroll>
+          <SectionAmbient />
           <CustomCursor />
           <ScrollProgress />
           <MouseSpotlight />

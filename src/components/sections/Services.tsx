@@ -1,7 +1,8 @@
 "use client";
 
 import { useRef, useState, useEffect } from "react";
-import { motion, AnimatePresence, useInView } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
+import { useSectionReveal } from "@/hooks/useSectionReveal";
 import {
   Globe, ShoppingCart, LayoutDashboard, Building2,
   Megaphone, Palette, Zap, X, Check
@@ -102,8 +103,7 @@ const services = [
 ];
 
 export default function Services() {
-  const containerRef = useRef<HTMLDivElement>(null);
-  const isInView = useInView(containerRef as React.RefObject<Element>, { once: true, margin: "-10% 0px" });
+  const sectionRef = useSectionReveal<HTMLElement>();
 
   // Glow trail cursor coordinates
   const [coords, setCoords] = useState({ x: 0, y: 0 });
@@ -153,7 +153,7 @@ export default function Services() {
   return (
     <>
       <section
-      ref={containerRef}
+      ref={sectionRef}
       id="services"
       className="relative section-padding overflow-hidden bg-[#080808]"
       aria-label="Services"
