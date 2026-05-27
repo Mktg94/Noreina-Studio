@@ -43,10 +43,29 @@ export default async function CaseStudyPage({ params }: Props) {
           {study.industry} · {study.year}
         </span>
 
-        <h1 className="text-4xl md:text-5xl font-bold text-white tracking-tight mb-3">
-          {study.title}
-        </h1>
-        <p className="text-[#6b7280] text-lg mb-10">{study.subtitle}</p>
+        <h1 className="text-4xl md:text-5xl font-bold text-white tracking-tight mb-3">{study.title}</h1>
+        <p className="text-[#6b7280] text-lg mb-8">{study.subtitle}</p>
+
+        <div className="flex flex-wrap gap-4 text-sm font-mono text-[#6b7280] mb-8 pb-8 border-b border-white/5">
+          <span>
+            <span className="text-white/40">Role</span> · {study.role}
+          </span>
+          <span>
+            <span className="text-white/40">Timeline</span> · {study.timeline}
+          </span>
+        </div>
+
+        <div className="flex flex-wrap gap-2 mb-10">
+          {study.outcomes.map((o) => (
+            <span
+              key={o}
+              className="text-xs px-3 py-1.5 rounded-full border border-white/10 text-[#a8a8b3]"
+              style={{ borderColor: `${study.accentColor}30` }}
+            >
+              {o}
+            </span>
+          ))}
+        </div>
 
         <p className="text-[#a8a8b3] leading-relaxed mb-12">{study.description}</p>
 

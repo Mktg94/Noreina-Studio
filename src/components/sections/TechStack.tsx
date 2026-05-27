@@ -138,7 +138,7 @@ export default function TechStack() {
 
           {/* Right Column: Interactive 3D Orbiting/Tilting Plane */}
           <div className="lg:col-span-8">
-            <div
+            {/* <div
               className="hidden lg:flex relative h-[200px] w-full items-center justify-center mb-8"
               style={{ perspective: "900px" }}
             >
@@ -160,7 +160,7 @@ export default function TechStack() {
                   </div>
                 ))}
               </div>
-            </div>
+            </div> */}
             <div
               onMouseMove={handleGridMouseMove}
               onMouseLeave={handleGridMouseLeave}
@@ -248,7 +248,7 @@ export default function TechStack() {
         </div>
 
         {/* Smooth GPU-Accelerated Infinite Marquee Upgrade with Fade edges */}
-        <div className="mt-20 relative w-full overflow-hidden py-4 border-y border-white/5 bg-black/20">
+        <div className="mt-20 relative w-full overflow-hidden py-4 border-y border-white bg-black/20">
           {/* Fade edges */}
           <div className="absolute inset-y-0 left-0 w-28 bg-gradient-to-r from-[#080808] to-transparent z-10 pointer-events-none" />
           <div className="absolute inset-y-0 right-0 w-28 bg-gradient-to-l from-[#080808] to-transparent z-10 pointer-events-none" />
@@ -258,7 +258,7 @@ export default function TechStack() {
               {[...techs, ...techs, ...techs].map((tech, idx) => (
                 <span
                   key={`${tech.name}-${idx}`}
-                  className="text-white/10 text-xs font-mono font-bold tracking-widest uppercase flex items-center gap-3 shrink-0"
+                  className="text-white text-xs font-mono font-bold tracking-widest uppercase flex items-center gap-3 shrink-0"
                 >
                   <span className="w-1.5 h-1.5 rounded-full" style={{ backgroundColor: tech.color }} />
                   {tech.name}

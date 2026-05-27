@@ -169,6 +169,7 @@ export default function Hero() {
   const [mounted, setMounted] = useState(false);
   const [isDesktop, setIsDesktop] = useState(false);
   const [webglScrollPaused, setWebglScrollPaused] = useState(false);
+  const [webglReady, setWebglReady] = useState(false);
 
   useEffect(() => {
     setMounted(true);
@@ -178,6 +179,22 @@ export default function Hero() {
     media.addEventListener("change", handler);
     return () => media.removeEventListener("change", handler);
   }, []);
+
+  useEffect(() => {
+    if (!mounted || !isDesktop) return;
+    const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    if (reduced) return;
+
+    const w = window as unknown as { requestIdleCallback?: (cb: () => void, opts?: { timeout?: number }) => number };
+    const id =
+      w.requestIdleCallback?.(() => setWebglReady(true), { timeout: 1200 }) ??
+      window.setTimeout(() => setWebglReady(true), 500);
+
+    return () => {
+      if (w.requestIdleCallback) window.cancelIdleCallback?.(id as unknown as number);
+      else window.clearTimeout(id as unknown as number);
+    };
+  }, [mounted, isDesktop]);
 
   useEffect(() => {
     const ctx = gsap.context(() => {
@@ -327,7 +344,7 @@ export default function Hero() {
       <div className="hero-letterbox-bottom absolute bottom-0 left-0 right-0 h-[15vh] bg-[#050510] z-50 origin-bottom" />
 
       <div className="absolute inset-0 grid-bg opacity-[0.12]" />
-      {mounted && isDesktop && (
+      {mounted && isDesktop && webglReady && (
         <CanvasErrorBoundary>
           <ParticleField scrollPaused={webglScrollPaused} />
         </CanvasErrorBoundary>
@@ -378,17 +395,17 @@ export default function Hero() {
 
           <h1
             ref={headingRef}
-            className="text-5xl sm:text-6xl md:text-7xl lg:text-[6rem] xl:text-[7.5rem] 2xl:text-[9rem] font-bold tracking-[-0.05em] text-white leading-[0.95] mb-10"
+            className="text-5xl sm:text-6xl md:text-7xl lg:text-[3.5rem] xl:text-[4.5rem] 2xl:text-[5.5rem] font-bold tracking-[-0.05em] text-white leading-[0.95] mb-10"
             style={{ transform: "translateZ(60px)", transformStyle: "preserve-3d" }}
           >
             <span className="block mb-1 md:mb-2">
-              {renderChars("Building modern", "gradient-char-holo")}
+              {renderChars("Websites & systems", "gradient-char-holo")}
             </span>
             <span className="block mb-1 md:mb-2">
-              {renderChars("digital experiences", "gradient-char-holo")}
+              {renderChars("that win you clients", "gradient-char-holo")}
             </span>
             <span className="block">
-              {renderChars("for businesses.", "gradient-char-holo")}
+              {renderChars("and scale your business.", "gradient-char-holo")}
             </span>
           </h1>
 
@@ -396,7 +413,7 @@ export default function Hero() {
             className="hero-subtitle text-[#94a3b8] text-base md:text-lg lg:text-xl max-w-2xl mx-auto mb-16 leading-relaxed font-sans"
             style={{ transform: "translateZ(40px)" }}
           >
-            Full-stack developer crafting modern websites, business systems, and exceptional digital products with cutting-edge technology.
+            Ethiopia-based full-stack developer delivering premium Next.js builds — fast, conversion-focused, and engineered for production.
           </p>
 
           <div
@@ -435,10 +452,10 @@ export default function Hero() {
             style={{ transform: "translateZ(15px)" }}
           >
             {[
-              { value: "50+", label: "Projects Shipped", delay: 0.1 },
-              { value: "98%", label: "Client Satisfaction", delay: 0.2 },
-              { value: "5+", label: "Years Building", delay: 0.3 },
-              { value: "∞", label: "Passion for Code", delay: 0.4 },
+              { value: "3+", label: "Live client products", delay: 0.1 },
+              { value: "100%", label: "Project completion", delay: 0.2 },
+              { value: "24h", label: "Response time", delay: 0.3 },
+              { value: "5+", label: "Years building", delay: 0.4 },
             ].map(({ value, label, delay }, index) => (
               <HeroCounter key={label} value={value} label={label} delay={delay} index={index} />
             ))}
